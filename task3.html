@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tic Tac Toe</title>
+
+<style>
+:root{
+  --bg: #0f172a;
+  --card: #1e293b;
+  --x: #22c55e;
+  --o: #38bdf8;
+  --accent: #a855f7;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top, #1e293b, #020617);
+}
+
+.game{
+  background: var(--card);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0,0,0,.6);
+  text-align: center;
+  width: 340px;
+}
+
+.game h1{
+  color: white;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.turn{
+  color: #cbd5f5;
+  margin-bottom: 20px;
+}
+
+.board{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.cell{
+  height: 90px;
+  background: #020617;
+  border-radius: 14px;
+  font-size: 2.5rem;
+  border: 2px solid #334155;
+  cursor: pointer;
+  transition: .25s;
+  color: white;
+}
+
+.cell:hover{
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+
+.cell.X{
+  color: var(--x);
+}
+
+.cell.O{
+  color: var(--o);
+}
+
+.controls button{
+  background: linear-gradient(135deg, var(--accent), #6366f1);
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.controls button:hover{
+  opacity: .9;
+  transform: scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+  <h1>Tic Tac Toe</h1>
+  <div class="turn" id="turn">Player X Turn</div>
+
+  <div class="board">
+    <button class="cell" onclick="play(0)"></button>
+    <button class="cell" onclick="play(1)"></button>
+    <button class="cell" onclick="play(2)"></button>
+    <button class="cell" onclick="play(3)"></button>
+    <button class="cell" onclick="play(4)"></button>
+    <button class="cell" onclick="play(5)"></button>
+    <button class="cell" onclick="play(6)"></button>
+    <button class="cell" onclick="play(7)"></button>
+    <button class="cell" onclick="play(8)"></button>
+  </div>
+
+  <div class="controls">
+    <button onclick="reset()">Restart</button>
+  </div>
+</div>
+
+<script>
+let board = Array(9).fill("");
+let player = "X";
+let active = true;
+
+const cells = document.querySelectorAll(".cell");
+const turn = document.getElementById("turn");
+
+const wins = [
+  [0,1,2],[3,4,5],[6,7,8],
+  [0,3,6],[1,4,7],[2,5,8],
+  [0,4,8],[2,4,6]
+];
+
+function play(i){
+  if(!active || board[i]) return;
+
+  board[i] = player;
+  cells[i].textContent = player;
+  cells[i].classList.add(player);
+
+  if(check()){
+    turn.textContent = `Player ${player} Wins 🎉`;
+    active = false;
+    return;
+  }
+
+  if(!board.includes("")){
+    turn.textContent = "Match Draw 🤝";
+    active = false;
+    return;
+  }
+
+  player = player === "X" ? "O" : "X";
+  turn.textContent = `Player ${player} Turn`;
+}
+
+function check(){
+  return wins.some(c =>
+    c.every(i => board[i] === player)
+  );
+}
+
+function reset(){
+  board.fill("");
+  active = true;
+  player = "X";
+  turn.textContent = "Player X Turn";
+  cells.forEach(c=>{
+    c.textContent = "";
+    c.classList.remove("X","O");
+  });
+}
+</script>
+
+</body>
+</html>
